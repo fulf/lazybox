@@ -14,15 +14,17 @@ void LazyBoxPoller::poll() {
   if(httpCode == HTTP_CODE_OK) {
     String payload = _http_client.getString();
 
-    int firstPipe = payload.indexOf('|'),
-      lastPipe = payload.lastIndexOf('|');
+    if (payload != "") {
+      int firstPipe = payload.indexOf('|'),
+        lastPipe = payload.lastIndexOf('|');
 
-    String entity = payload.substring(0, firstPipe),
-      pin = payload.substring(firstPipe + 1 , lastPipe),
-      action = payload.substring(lastPipe + 1);
+      String entity = payload.substring(0, firstPipe),
+        pin = payload.substring(firstPipe + 1 , lastPipe),
+        action = payload.substring(lastPipe + 1);
 
-    if (!strcmp(entity.c_str(), _call_sign)) {
-        _actor->act(pin, action);
+      if (!strcmp(entity.c_str(), _call_sign)) {
+          _actor->act(pin, action);
+      }
     }
   }
 
