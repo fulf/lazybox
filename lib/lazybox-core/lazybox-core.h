@@ -2,20 +2,27 @@
 #define LAZYBOX_CORE_H
 
 #include <Arduino.h>
-#include <ESP8266WiFi.h>
-#include <lazybox-webserver.h>
-
-#define VERSION "0.0.1"
+#include <lazybox-boards.h>
+#include <map>
 
 class LazyBoxCore
 {
   private:
-    LazyBoxWebServer *_web_server;
-
-    void sendJSON(String, int = 200, bool = false);
+    uint8_t _pinCount;
+    LazyBoxPin* _pins;
+    uint8_t findIndexByPin(LazyBoxPin);
+    uint16_t clamp(uint16_t, uint16_t, uint16_t);
   public:
-    LazyBoxCore();
-    void run();
+    enum {
+      WEMOSD1miniPro,
+    };
+
+    LazyBoxCore(uint8_t);
+    LazyBoxPin* getPins();
+    LazyBoxPin getPin(uint8_t);
+    uint8_t getPinCount();
+    void setPinMode(LazyBoxPin, const char*);
+    void setPinOutput(LazyBoxPin, uint16_t);
 };
 
 #endif

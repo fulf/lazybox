@@ -1,9 +1,9 @@
-#include <lazybox-core.h>
+#include <lazybox.h>
 
-LazyBoxCore *lbc;
+LazyBox *lbc;
 
 void setup() {
-  lbc = new LazyBoxCore();
+  lbc = new LazyBox(LazyBoxCore::WEMOSD1miniPro);
 }
 
 void loop(){
