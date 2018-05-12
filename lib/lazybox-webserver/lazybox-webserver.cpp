@@ -6,10 +6,14 @@ LazyBoxWebServer::LazyBoxWebServer(LazyBoxCore* lbc) {
   _web_server.on("/", HTTP_GET, std::bind(&LazyBoxWebServer::handleRoot, this));
   _web_server.onNotFound(std::bind(&LazyBoxWebServer::handleNotFound, this));
 
+  setPinHandlers();
+
   _web_server.begin();
 }
 
-void LazyBoxWebServer::setPinHandlers(LazyBoxPin* pins, uint8_t totalPins) {
+void LazyBoxWebServer::setPinHandlers() {
+  LazyBoxPin* pins = _core->getPins();
+  uint8_t totalPins = _core->getPinCount();
   for(uint8_t i = 0; i < totalPins; ++i) {
     _web_server.on(("/pin/" + pins[i].name).c_str(), HTTP_GET, std::bind(&LazyBoxWebServer::handlePinGet, this, i));
     _web_server.on(("/pin/" + pins[i].name).c_str(), HTTP_POST, std::bind(&LazyBoxWebServer::handlePinPost, this, i));

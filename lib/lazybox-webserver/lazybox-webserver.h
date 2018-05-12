@@ -15,6 +15,7 @@ class LazyBoxWebServer
       handleNotFound(),
 
       // route /pin/{int}
+      setPinHandlers(),
       handlePinGet(uint8_t),
       handlePinPost(uint8_t),
       handlePinPut(uint8_t),
@@ -28,8 +29,7 @@ class LazyBoxWebServer
   public:
     LazyBoxWebServer(LazyBoxCore*);
 
-    void setPinHandlers(LazyBoxPin*, uint8_t),
-      sendJSON(String, uint16_t = 200, bool = false),
+    void sendJSON(String, uint16_t = 200, bool = false),
       handleClient();
 };
 

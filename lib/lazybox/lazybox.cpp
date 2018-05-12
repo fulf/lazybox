@@ -9,7 +9,6 @@ LazyBox::LazyBox(uint8_t board) {
   _core = new LazyBoxCore(board);
 
   _web_server = new LazyBoxWebServer(_core);
-  _web_server->setPinHandlers(_core->getPins(), _core->getPinCount());
 
   setWiFi(password);
 
