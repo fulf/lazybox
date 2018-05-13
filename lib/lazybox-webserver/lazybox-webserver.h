@@ -13,28 +13,23 @@ class LazyBoxWebServer
     LazyBoxCore *_core;
     void handleRoot(),
       handleNotFound(),
-
-      // route /pin/{int}
-      setPinHandlers(),
-      handlePinGet(uint8_t),
-      handlePinPost(uint8_t),
-      handlePinPut(uint8_t),
-      handlePinDelete(uint8_t),
-      handlePinOptions(uint8_t),
-
-      setWiFiHandlers(),
-      handleWiFiGet(),
-      handleWiFiPost(),
-      handleWiFiDelete(),
-
-      send(uint8_t code, const char *content_type=NULL, const String &content=String("")),
       setPreflightHeaders();
 
   public:
     LazyBoxWebServer(LazyBoxCore*);
 
-    void sendJSON(String, uint16_t = 200, bool = false),
+    typedef std::function<void(void)> THandlerFunction;
+
+    const char* getArgument(const char*);
+
+    void send(uint8_t code, const char *content_type=NULL, const String &content=String("")),
+      sendJSON(String, uint16_t = 200, bool = false),
       handleClient(),
+      addGet(const char*, THandlerFunction),
+      addPost(const char*, THandlerFunction),
+      addPut(const char*, THandlerFunction),
+      addDelete(const char*, THandlerFunction),
+      addOptions(const char*, THandlerFunction),
       addSensor(String name, int *val),
       addSensor(String name, float *val),
       addSensor(String name, String *val),
