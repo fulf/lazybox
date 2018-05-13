@@ -13,6 +13,16 @@ LazyBox::LazyBox(uint8_t board) {
   setWiFi(password);
 
   _core->setPinMode(_core->getPin("D4"), "OUTPUT");
+  if (WiFi.status() == WL_CONNECTED) {
+    delay(200);
+    _core->setPinOutput(_core->getPin("D4"), 1);
+    delay(200);
+    _core->setPinOutput(_core->getPin("D4"), 0);
+    delay(200);
+    _core->setPinOutput(_core->getPin("D4"), 1);
+    delay(200);
+    _core->setPinOutput(_core->getPin("D4"), 0);
+  }
 
   _poller = new LazyBoxPoller(id, "http://lazybox-api.herokuapp.com/intent", new LazyBoxActor(_core));
 }
