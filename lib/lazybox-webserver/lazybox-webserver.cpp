@@ -11,6 +11,42 @@ LazyBoxWebServer::LazyBoxWebServer(LazyBoxCore* lbc) {
   _web_server.begin();
 }
 
+void LazyBoxWebServer::addSensor(String name, int *val) {
+  _web_server.on(("/sensor/" + name).c_str(), HTTP_GET, [=](){
+    sendJSON(String(*val));
+  });
+}
+
+void LazyBoxWebServer::addSensor(String name, float *val) {
+  _web_server.on(("/sensor/" + name).c_str(), HTTP_GET, [=](){
+    sendJSON(String(*val));
+  });
+}
+
+void LazyBoxWebServer::addSensor(String name, String *val) {
+  _web_server.on(("/sensor/" + name).c_str(), HTTP_GET, [=](){
+    sendJSON(String(*val));
+  });
+}
+
+void LazyBoxWebServer::addSensor(String name, int (*cb)()) {
+  _web_server.on(("/sensor/" + name).c_str(), HTTP_GET, [=](){
+    sendJSON(String(cb()));
+  });
+}
+
+void LazyBoxWebServer::addSensor(String name, float (*cb)()) {
+  _web_server.on(("/sensor/" + name).c_str(), HTTP_GET, [=](){
+    sendJSON(String(cb()));
+  });
+}
+
+void LazyBoxWebServer::addSensor(String name, String (*cb)()) {
+  _web_server.on(("/sensor/" + name).c_str(), HTTP_GET, [=](){
+    sendJSON(String(cb()));
+  });
+}
+
 void LazyBoxWebServer::setPinHandlers() {
   LazyBoxPin* pins = _core->getPins();
   uint8_t totalPins = _core->getPinCount();

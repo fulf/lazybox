@@ -30,7 +30,13 @@ class LazyBoxWebServer
     LazyBoxWebServer(LazyBoxCore*);
 
     void sendJSON(String, uint16_t = 200, bool = false),
-      handleClient();
+      handleClient(),
+      addSensor(String name, int *val),
+      addSensor(String name, float *val),
+      addSensor(String name, String *val),
+      addSensor(String name, int (*cb)()),
+      addSensor(String name, float (*cb)()),
+      addSensor(String name, String (*cb)());
 };
 
 #endif
