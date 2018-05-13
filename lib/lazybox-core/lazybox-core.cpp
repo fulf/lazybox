@@ -32,7 +32,7 @@ uint8_t LazyBoxCore::getPinCount() {
 }
 
 void LazyBoxCore::setPinMode(LazyBoxPin pin, const char* mode) {
-  uint8_t pinIndex = LazyBoxCore::findIndexByPin(pin);
+  uint8_t pinIndex = findIndexByPin(pin);
 
   if (!strcmp(mode, "INPUT")) {
     pinMode(pin.pin, INPUT);
@@ -47,7 +47,7 @@ void LazyBoxCore::setPinMode(LazyBoxPin pin, const char* mode) {
 }
 
 void LazyBoxCore::setPinOutput(LazyBoxPin pin, uint16_t output) {
-  uint8_t pinIndex = LazyBoxCore::findIndexByPin(pin);
+  uint8_t pinIndex = findIndexByPin(pin);
   if (!strcmp(pin.mode, "output")) {
     uint16_t val = clamp(output, 0, 1);
     digitalWrite(pin.pin, val);

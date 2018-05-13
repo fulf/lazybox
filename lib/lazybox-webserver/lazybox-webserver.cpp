@@ -25,7 +25,7 @@ void LazyBoxWebServer::setPinHandlers() {
 
 void LazyBoxWebServer::sendJSON(String message, uint16_t code, bool raw) {
   String success = (code/100) == 2 ? "true" : "false";
-  LazyBoxWebServer::send(code, "application/json", raw ? message : "{\"success\":" + success+ ",\"message\":\"" + message+ "\"}");
+  send(code, "application/json", raw ? message : "{\"success\":" + success+ ",\"message\":\"" + message+ "\"}");
 }
 
 void LazyBoxWebServer::handlePinGet(uint8_t pin) {
@@ -45,7 +45,7 @@ void LazyBoxWebServer::handlePinGet(uint8_t pin) {
   response.replace("{md}", p.mode);
   response.replace("{vl}", String(p.value));
 
-  LazyBoxWebServer::sendJSON(response, 200, true);
+  sendJSON(response, 200, true);
 }
 
 void LazyBoxWebServer::handlePinPost(uint8_t pin) {
@@ -53,25 +53,25 @@ void LazyBoxWebServer::handlePinPost(uint8_t pin) {
   uint16_t output = atoi(_web_server.arg("output").c_str());
 
   _core->setPinOutput(p, output);
-  LazyBoxWebServer::sendJSON("POST pin " + String(p.pin));
+  sendJSON("POST pin " + String(p.pin));
 }
 
 void LazyBoxWebServer::handlePinPut(uint8_t pin) {
   LazyBoxPin p = _core->getPin(pin);
 
   _core->setPinMode(p, _web_server.arg("mode").c_str());
-  LazyBoxWebServer::sendJSON("PUT pin" + String(p.pin));
+  sendJSON("PUT pin" + String(p.pin));
 }
 
 void LazyBoxWebServer::handlePinDelete(uint8_t pin) {
   LazyBoxPin p = _core->getPin(pin);
 
   _core->setPinOutput(p, 0);
-  LazyBoxWebServer::sendJSON("DELETE pin " + String(p.pin));
+  sendJSON("DELETE pin " + String(p.pin));
 }
 
 void LazyBoxWebServer::handlePinOptions(uint8_t pin) {
-  LazyBoxWebServer::send(200);
+  send(200);
 }
 
 void LazyBoxWebServer::handleClient() {
@@ -79,11 +79,11 @@ void LazyBoxWebServer::handleClient() {
 }
 
 void LazyBoxWebServer::handleNotFound() {
-  LazyBoxWebServer::sendJSON("The requested page could not be found", 404);
+  sendJSON("The requested page could not be found", 404);
 }
 
 void LazyBoxWebServer::handleRoot() {
-  LazyBoxWebServer::sendJSON("Welcome to the root page", 200);
+  sendJSON("Welcome to the root page", 200);
 }
 
 void LazyBoxWebServer::send(uint8_t code, const char *content_type, const String &content) {
