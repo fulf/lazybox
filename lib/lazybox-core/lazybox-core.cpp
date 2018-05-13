@@ -59,6 +59,23 @@ void LazyBoxCore::setPinOutput(LazyBoxPin pin, uint16_t output) {
   }
 }
 
+String LazyBoxCore::getWiFiEncryptionType(uint8_t wifi_id) {
+  switch(WiFi.encryptionType(wifi_id)) {
+    case ENC_TYPE_NONE:
+      return "none";
+    case ENC_TYPE_WEP:
+      return "wep";
+    case ENC_TYPE_TKIP:
+      return "wpa";
+    case ENC_TYPE_CCMP:
+      return "wpa2";
+    case ENC_TYPE_AUTO:
+      return "auto";
+    default:
+      return "unknown";
+  }
+}
+
 uint8_t LazyBoxCore::connectWiFi(const char* ssid, const char* password) {
   const uint8_t MAX_TRIES = 30;
   uint8_t status;

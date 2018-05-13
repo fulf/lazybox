@@ -25,6 +25,7 @@ class LazyBoxCore
     uint8_t getPinCount();
     void setPinMode(LazyBoxPin, const char*);
     void setPinOutput(LazyBoxPin, uint16_t);
+    String getWiFiEncryptionType(uint8_t);
     uint8_t connectWiFi(const char*, const char* = "");
     void disconnectWiFi();
 };

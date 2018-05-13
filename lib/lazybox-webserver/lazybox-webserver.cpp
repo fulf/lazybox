@@ -7,7 +7,7 @@ LazyBoxWebServer::LazyBoxWebServer(LazyBoxCore* lbc) {
   _web_server.onNotFound(std::bind(&LazyBoxWebServer::handleNotFound, this));
 
   setPinHandlers();
-
+  setWiFiHandlers();
   _web_server.begin();
 }
 
@@ -59,9 +59,82 @@ void LazyBoxWebServer::setPinHandlers() {
   }
 }
 
+void LazyBoxWebServer::setWiFiHandlers() {
+  _web_server.on("/wifi", HTTP_GET, std::bind(&LazyBoxWebServer::handleWiFiGet, this));
+  _web_server.on("/wifi", HTTP_POST, std::bind(&LazyBoxWebServer::handleWiFiPost, this));
+  _web_server.on("/wifi", HTTP_DELETE, std::bind(&LazyBoxWebServer::handleWiFiDelete, this));
+}
+
+void LazyBoxWebServer::handleWiFiGet() {
+  String response = "[";
+  int n = WiFi.scanNetworks();
+  for(int i=0; i<n; ++i) {
+    String temp = "{\
+      \"id\":{i},\
+      \"attributes\":{\
+        \"ssid\":\"{s}\",\
+        \"rssi\":{r},\
+        \"encryption\":\"{e}\"\
+      }\
+    }";
+
+    temp.replace("{i}", String(i+1));
+    temp.replace("{s}", WiFi.SSID(i));
+    temp.replace("{r}", String(WiFi.RSSI(i)));
+    temp.replace("{e}", _core->getWiFiEncryptionType(i));
+
+    response += temp + (i<n-1 ? "," : "");
+  }
+  response += "]";
+
+  sendJSON(response, 200, true);
+}
+
+void LazyBoxWebServer::handleWiFiPost() {
+  const uint8_t MAX_TRIES = 30;
+  uint8_t status;
+  String ssid = _web_server.arg("ssid");
+  String pass = _web_server.arg("pass");
+
+  uint16_t respCode = 200;
+  String respMessage;
+
+  if(ssid.length() > 31 || ssid.length() == 0) {
+    respCode = 400;
+    respMessage = "Invalid SSID provided.";
+  } else if((pass.length() > 0 && pass.length() < 8) || pass.length() > 63) {
+    respCode = 400;
+    respMessage = "Invalid password provided.";
+  }
+
+  if(respCode == 200) {
+    _core->connectWiFi(ssid.c_str(), pass.c_str());
+
+    if(status != WL_CONNECTED) {
+      respCode = 403;
+      respMessage = "Invalid credentials provided.";
+    } else {
+      respCode = 200;
+      respMessage = "Connected succesfully to provided WiFi.";
+    }
+  }
+
+  sendJSON(respMessage, respCode);
+}
+
+void LazyBoxWebServer::handleWiFiDelete() {
+  WiFi.disconnect();
+  sendJSON("Disconnected succesfully!");
+}
+
 void LazyBoxWebServer::sendJSON(String message, uint16_t code, bool raw) {
   String success = (code/100) == 2 ? "true" : "false";
-  send(code, "application/json", raw ? message : "{\"success\":" + success+ ",\"message\":\"" + message+ "\"}");
+
+  if (!raw) {
+    message = "\"" + message + "\"";
+  }
+
+  send(code, "application/json", "{\"success\":" + success + ",\"message\":" + message + "}");
 }
 
 void LazyBoxWebServer::handlePinGet(uint8_t pin) {

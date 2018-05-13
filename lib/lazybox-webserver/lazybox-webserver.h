@@ -22,9 +22,13 @@ class LazyBoxWebServer
       handlePinDelete(uint8_t),
       handlePinOptions(uint8_t),
 
+      setWiFiHandlers(),
+      handleWiFiGet(),
+      handleWiFiPost(),
+      handleWiFiDelete(),
+
       send(uint8_t code, const char *content_type=NULL, const String &content=String("")),
       setPreflightHeaders();
-
 
   public:
     LazyBoxWebServer(LazyBoxCore*);
