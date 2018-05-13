@@ -2,6 +2,7 @@
 #define LAZYBOX_CORE_H
 
 #include <Arduino.h>
+#include <ESP8266WiFi.h>
 #include <lazybox-boards.h>
 #include <map>
 
@@ -24,6 +25,8 @@ class LazyBoxCore
     uint8_t getPinCount();
     void setPinMode(LazyBoxPin, const char*);
     void setPinOutput(LazyBoxPin, uint16_t);
+    uint8_t connectWiFi(const char*, const char* = "");
+    void disconnectWiFi();
 };
 
 #endif

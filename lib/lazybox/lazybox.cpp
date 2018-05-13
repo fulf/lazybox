@@ -28,13 +28,5 @@ void LazyBox::setWiFi(const char* password) {
   WiFi.disconnect();
   WiFi.mode(WIFI_AP_STA);
   WiFi.softAP("lazybox", password);
-  WiFi.begin("HackTM");
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.print(".");
-  }
-  Serial.println("");
-
-  Serial.println(WiFi.localIP().toString());
+  _core->connectWiFi("HackTM");
 }

@@ -59,6 +59,33 @@ void LazyBoxCore::setPinOutput(LazyBoxPin pin, uint16_t output) {
   }
 }
 
+uint8_t LazyBoxCore::connectWiFi(const char* ssid, const char* password) {
+  const uint8_t MAX_TRIES = 30;
+  uint8_t status;
+
+  WiFi.begin(ssid, password);
+
+  Serial.println("");
+
+  for(int t=0; t<MAX_TRIES && WiFi.status() != WL_CONNECTED; ++t) {
+    Serial.print(".");
+    delay(200);
+  }
+
+  if (WiFi.status() != WL_CONNECTED) {
+      Serial.println("Could not connect.");
+      WiFi.disconnect();
+  } else {
+    Serial.println("Connected: " + WiFi.localIP().toString());
+  }
+
+  return WiFi.status();
+}
+
+void LazyBoxCore::disconnectWiFi() {
+  WiFi.disconnect();
+}
+
 uint8_t LazyBoxCore::findIndexByPin(LazyBoxPin pin) {
   for (uint8_t i = 0; i < _pinCount; ++i) {
     if (_pins[i].pin == pin.pin) return i;
