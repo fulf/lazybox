@@ -4,11 +4,12 @@
 
 LazyBoxPoller::LazyBoxPoller(const char* name, const char* url, LazyBoxActor* actor) {
   _call_sign = name;
-  _http_client.begin(url);
+  _url = url;
   _actor = actor;
 }
 
 void LazyBoxPoller::poll() {
+  _http_client.begin(_url);
   int httpCode = _http_client.GET();
 
   if(httpCode == HTTP_CODE_OK) {
@@ -27,6 +28,6 @@ void LazyBoxPoller::poll() {
       }
     }
   }
-
+  _http_client.end();
   yield();
 }
